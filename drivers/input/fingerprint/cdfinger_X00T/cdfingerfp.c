@@ -557,36 +557,6 @@ static struct miscdevice st_cdfinger_dev = {
 static int cdfinger_fb_notifier_callback(struct notifier_block* self,
                                         unsigned long event, void* data)
 {
-    struct fb_event* evdata = data;
-    unsigned int blank;
-    int retval = 0;
-	
-    if (event != FB_EVENT_BLANK /* FB_EARLY_EVENT_BLANK */) {
-        return 0;
-    }
-    blank = *(int*)evdata->data;
-    switch (blank) {
-        case FB_BLANK_UNBLANK:
-		mutex_lock(&g_cdfingerfp_data->buf_lock);
-		screen_status = 1;
-		if (isInKeyMode == 0)
-			cdfinger_async_report();
-		mutex_unlock(&g_cdfingerfp_data->buf_lock);
-
-            break;
-        case FB_BLANK_POWERDOWN:
-		mutex_lock(&g_cdfingerfp_data->buf_lock);
-		screen_status = 0;
-		if (isInKeyMode == 0)
-			cdfinger_async_report();
-		mutex_unlock(&g_cdfingerfp_data->buf_lock);
-            break;
-        default:
-            break;
-    }
-
-    return retval;
-
 	struct fb_event* evdata = data;
 	unsigned int blank;
 	int retval = 0;
